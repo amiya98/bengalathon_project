@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Nov  3 09:40:47 2019
-
-@author: User
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 31 19:21:22 2019
-
-@author: User
+@author: Arunava Dey,Amiya Ghosh,Dipanjan Maity,Anick Bhattacharya
 """
 from datetime import datetime
 import mysql.connector
