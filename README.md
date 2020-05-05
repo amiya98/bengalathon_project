@@ -11,4 +11,4 @@ Arunava Dey: @adey99
 #
 Dipanjan Maity: @Dipanjan-M
 #
-Anick Bhattacharya: 
+Anick Bhattacharya: @anick09
