@@ -3,13 +3,10 @@ include("logcheck.php");
 include("dbcon.php");
 date_default_timezone_set("Asia/Kolkata");
 
+// error_reporting(0);
+
 if(isset($_POST) && !empty($_POST))
 {
-  // echo "<pre>";
-  // print_r($_POST);
-  // echo "</pre>";
-  // $yr = date('Y');
-  // $mont = date('m');
   if(isset($_POST['mon']) && !empty($_POST['mon']))
   {
     $dat = strtotime($_POST['mon']);
@@ -38,7 +35,7 @@ else
 }
 $areas = array();
 $count = 0;
-$q1 = "SELECT DISTINCT area FROM wsage";
+$q1 = "SELECT DISTINCT area FROM `users`";
 $res = $con ->query($q1);
 while($rows = $res -> fetch_assoc())
 {
@@ -69,14 +66,13 @@ for($x = 0; $x < $count; $x++)
   array_push($totalUsage, $sum);
   $totalUsed += $sum;
 }
-try
-{
-  $avarage = $totalUsed/$avgcounter;
-}
-catch(Exception $e)
-{
+$flag = false;
+if($avgcounter == 0){
   $avarage = 0;
-  $msg = $e->getMessage();
+  $flag = true;
+}
+else{
+  $avarage = $totalUsed/$avgcounter;
 }
 
 //echo $areas[0];
@@ -134,6 +130,27 @@ catch(Exception $e)
     ::-webkit-scrollbar-thumb:hover {
       background: #555; 
     }
+    #check{
+      position: absolute;
+      top: 5px;
+      overflow: auto;
+      width: 850px;
+      left: 50%;
+      margin-left: -425px;
+      height: 650px;
+      background-color: #fff;
+      z-index: 100;
+      display: none;
+    }
+    #check tr{
+      border: 1px solid #000;
+    }
+    #check th{
+      border: 1px solid #000;
+    }
+    #check td{
+      border: 1px solid #000;
+    }
   </style>
 </head>
 <title>Water usage table</title>
@@ -142,17 +159,6 @@ catch(Exception $e)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-  // window.onload = setupRefresh;
-  //   function setupRefresh()
-  //   {
-  //       setInterval("refreshBlock();",5000);
-  //   }
-    
-
-  //   function refreshBlock()
-  //   {
-  //      $('#show').load("displaydata1.php");
-  //   }
 </script>
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart"]});
@@ -162,10 +168,6 @@ catch(Exception $e)
 
         ['Area','Water usage'],
         <?php 
-          //$sql = "SELECT * FROM wsage WHERE sid=$sidd AND month=$mont AND year=$yr";
-          //$sql = "SELECT * FROM wsage WHERE sid=$sidd";
-          //$exec = mysqli_query($con,$query);
-          //$exec = $con->query($sql);
           $i = 0;
           while($i<$count){
             echo "['".$areas[$i]."',".$totalUsage[$i]."],";
@@ -176,24 +178,22 @@ catch(Exception $e)
 
       var options = {
       title: 'Water usage according to Area per month'
-        /*pieHole: 0.5,
-          PieSliceTextStyle: {
-            color: 'black',
-          }*/
-          //legend: 'none',
-          //is3D : true
       };
       <?php
-      if($chart_ch == "pie")
+      if($chart_ch == "pie" && !$flag)
       {?>
         var chart = new google.visualization.PieChart(document.getElementById("show"));
         chart.draw(data,options);
         <?php
       }
-      else if($chart_ch == "column")
+      else if($chart_ch == "column" && !$flag)
       {?>
         var chart = new google.visualization.ColumnChart(document.getElementById("show"));
         chart.draw(data,options);
+        <?php
+      }
+      else if($flag){?>
+        document.getElementById("show").innerHTML = `<div style="text-align: center;padding-top: 50px;"><h1 style="color: red;"> No data found.</h1></div>`;
         <?php
       }
       ?>
@@ -202,6 +202,12 @@ catch(Exception $e)
   </script>
 
 <body>
+  <div class="w3-leftbar w3-border-blue" id="check">
+    <span style="float: right;font-size: 25px;cursor: pointer;"><i class="fa fa-times" onclick="document.getElementById('check').style.display = 'none';"></i>&nbsp;&nbsp;</span>
+    <div id="res-area" style="margin-top: 35px;padding: 5px 8px 5px 8px;">
+      
+    </div>
+  </div>
   <div class="row w3-padding justify-content-end w3-light-blue">
     <div class="p-2">
       <p class="w3-bar-item w3-xlarge w3-text-red">This is Admin Panel**</p>
@@ -272,6 +278,9 @@ catch(Exception $e)
       </div>
       <div>
         <h4 class="w3-text-blue"><strong><u>Admin tools</u></strong></h4>
+        <br>
+        <button class="btn btn-primary" id="check_meter">Check Meter</button>
+        <br>
         <br>
         <button class="btn btn-info" data-toggle="modal" data-target="#myModal1">Generate Notice</button>
         <br>
@@ -635,6 +644,56 @@ catch(Exception $e)
 
     </div>
   </div>
-
+  <script>
+    $(document).on('click','#check_meter',function(){
+      $.ajax({
+        url: "check_meter.php",
+        success: function(data, status){
+          // window.alert("Data : "+data+"n Status : "+status);
+          var divtoshow = document.getElementById('check');
+          var area = document.getElementById("res-area");
+          try{
+            area.innerHTML = "";
+            area.innerHTML += `<table style="width: 100%;">
+                               <thead>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Email</th>
+                                  <th>Phone No.</th>
+                                  <th>Area</th>
+                                  <th>Sensor ID</th>
+                                  <th>Status</th>
+                                </tr>
+                               </thead>
+                               <tbody id="tbl-bdy"></tbody></table>`;
+            var users = JSON.parse(data);
+            var tbdy = document.getElementById('tbl-bdy');
+            users.forEach(function(item){
+              var splited = item[5].split(':');
+              // console.log("Hour : "+splited[0]+" Minute : "+splited[1]+" Second : "+splited[2]);
+              var second = parseInt(splited[0])*3600 + parseInt(splited[1])*60 + parseInt(splited[2]);
+              var mintue = second / 60;
+              var str = `<i class="fa fa-circle" style="color: #00ff00;"></i>Online`;
+              if(mintue>10){
+                str = `<i class="fa fa-circle" style="color: #ff0000;"></i>Offline`;
+              }
+              tbdy.innerHTML += `<tr>
+                                    <td>`+item[0]+`</td>
+                                    <td>`+item[1]+`</td>
+                                    <td>`+item[2]+`</td>
+                                    <td>`+item[3]+`</td>
+                                    <td>`+item[4]+`</td>
+                                    <td>`+str+`</td>
+                                 </tr>`
+            });
+          }
+          catch(e){
+            area.innerHTML = "<h1> No Data Found</h1>";
+          }
+          divtoshow.style.display ='block';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
