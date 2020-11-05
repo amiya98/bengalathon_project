@@ -1,13 +1,12 @@
 <?php
 include("dbcon.php");
-if(isset($_POST) && !empty($_POST))
+if(isset($_POST['name']) && !empty($_POST['sensorId']))
 {
     //echo"<pre>";print_r($_POST);echo"<pre>";
     $name = $_POST['name'];
     $email = $_POST['email'];
     $sensorId = $_POST['sensorId'];
     $area = $_POST['area'];
-    //$gender = !empty($_POST['gender'])?$_POST['gender']:'NULL';
     $password = md5($_POST['password']);
     $sql = "INSERT INTO users(name,email,sensorId,area,password) VALUES('$name','$email','$sensorId','$area','$password')";
     if($con->query($sql))

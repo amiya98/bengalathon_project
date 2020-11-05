@@ -1,11 +1,7 @@
 <?php
 include("logcheck.php");
 include("dbcon.php");
-if(isset($_POST) && !empty($_POST))
-{
-	// echo "<pre>";
-	// print_r($_POST);
-	// echo "</pre>";
+if(isset($_POST['name']) && !empty($_POST['senid'])){
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$phone = $_POST['phone'];
@@ -15,37 +11,22 @@ if(isset($_POST) && !empty($_POST))
 	$newPassword = md5($_POST['npsw']);
 	$repPassword = md5($_POST['rpsw']);
 	$id = $_SESSION['user']['id'];
-	// $sql1 = "SELECT * FROM users WHERE sensorId='$sensor'";
-	// $result = $con->query($sql1);
-	// $row = $result->fetch_assoc();
-	// echo "<pre>";
-	// print_r($row);
-	// echo "</pre>";
-	// echo $_SESSION['user']['password'];
-	// echo "<br>";
-	// echo $oldPassword;
-	if($phone == "")
-	{
+	if($phone == ""){
 		$phone = null;
 	}
-	if($oldPassword == $_SESSION['user']['password'])
-	{
-		if($newPassword == $repPassword)
-		{
+	if($oldPassword == $_SESSION['user']['password']){
+		if($newPassword == $repPassword){
 			$sql="UPDATE users SET name='$name',email='$email',phoneNo='$phone',password='$newPassword' WHERE id='$id'";
-			//echo "All ok u r ready to go.";
-			if($result = $con -> query($sql))
-			{
+			if($result = $con -> query($sql)){
 				$q = "SELECT * FROM users WHERE id='$id'";
 				$res = $con->query($q);
 				$row = $res -> fetch_assoc();
 				$_SESSION['user']=$row;
-				echo "success.";
+				echo "Success. Info updated successfully.";
 				header("Refresh:3;url=udashboard.php");
 			}
-			else
-			{
-				echo "Unable to execute query.";
+			else{
+				echo "Server error.";
 				header("Refresh:3;url=udashboard.php");
 			}
 		}
@@ -59,7 +40,7 @@ if(isset($_POST) && !empty($_POST))
 	else
 	{
 		echo "Entered old password is wrong.";
-		header("Refresh:3;url=udashboard.php");
+		header("Refresh:5;url=udashboard.php");
 	}
 }
 ?>

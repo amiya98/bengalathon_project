@@ -1,31 +1,21 @@
 <?php
 include("logcheck.php");
 include ("dbcon.php");
-if(isset($_POST) && !empty($_POST))
-{
+if(isset($_POST['name']) && !empty($_POST['senid'])){
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$sensor = $_POST['senid'];
 	$area = $_POST['area'];
-	$problem = $_POST['report'];
-	//echo $name."<br>";
-	//echo $email."<br>";
-	//echo $sensor."<br>";
-	//echo $area."<br>";
-	//echo $problem."<br>";
+	$problem = $con->real_escape_string($_POST['report']);
 	$sql = "INSERT INTO report(name,email,senid,area,descript) VALUES('$name','$email','$sensor','$area','$problem')";
-	if($con->query($sql))
-	{
-		header("Location:udashboard.php");
+	if($con->query($sql)){
+		echo "Report has been filed successfully.";
 	}
-	else
-	{
-		echo "Error.";
-		header("Refresh: 5; url=udashboard.php");
+	else{
+		echo "Server error. Try after some time.";
 	}
 }
-else
-{
+else{
 	echo "error 404.";
 }
 ?>
