@@ -1,11 +1,9 @@
 <?php 
-include("logcheck.php");
-if(isset($_POST) && !empty($_POST))
-{
+include "logcheck.php";
+if(isset($_POST['number']) && !empty($_POST['text'])){
     $number=$_POST['number'];
     $text=$_POST['text'];
-    echo $number."<br>";
-    echo $text."<br>";
+    // print_r($_POST);
     $url="www.way2sms.com/api/v1/sendCampaign";
     $message = urlencode($text);// urlencode your message
     $curl = curl_init();
@@ -19,7 +17,9 @@ if(isset($_POST) && !empty($_POST))
     $result = curl_exec($curl);
     //echo($result);
     curl_close($curl);
-    echo "Message Sent. <br>";
-    header("Refresh: 3;url=adashboard.php");
+    echo "Message has been sent successfully.";
+}
+else{
+    echo "Invalid request.";
 }
 ?>

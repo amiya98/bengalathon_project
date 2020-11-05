@@ -1,10 +1,8 @@
 <?php
-//session_destroy();
 session_start();
 include("dbcon.php");
-if(isset($_POST) && !empty($_POST))
+if(isset($_POST['email']) && !empty($_POST['password']))
 {
-    //echo"<pre>";print_r($_POST);echo"</pre>";
     $email=$_POST['email'];
     $password=md5($_POST['password']);
     $sql="SELECT * FROM users WHERE email='$email' AND password='$password'";
