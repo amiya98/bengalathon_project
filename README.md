@@ -5,11 +5,11 @@ Objective of this project was to deploy a Machine Learning based Water Metering 
 
 # Authors:
 
+Dipanjan Maity: @Dipanjan-M
+
 Amiya Ghosh: @amiya98
 
 Arunava Dey: @adey99
-
-Dipanjan Maity: @Dipanjan-M
 
 Anick Bhattacharya: @anick09
 
