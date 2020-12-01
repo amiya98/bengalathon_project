@@ -13,8 +13,5 @@ Arunava Dey: @adey99
 
 Anick Bhattacharya: @anick09
 
-# Image of the meter
-![alt tag]()
-
 # Product demo video
 https://youtu.be/O-BlOAdvN-M
