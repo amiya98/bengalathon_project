@@ -14,7 +14,7 @@ Arunava Dey: @adey99
 Anick Bhattacharya: @anick09
 
 # Hardware prototype
-![alt tag](https://github.com/Dipanjan-M/bengalathon_project/blob/master/sample_prototype/prototype_v2.jpg){:height="50%" width="50%"}
+<img src="https://github.com/Dipanjan-M/bengalathon_project/blob/master/sample_prototype/prototype_v2.jpg" alt="prototype" height="250" width="auto">
 
 # Product demo video
 https://youtu.be/O-BlOAdvN-M
