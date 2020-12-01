@@ -13,8 +13,8 @@ Arunava Dey: @adey99
 
 Anick Bhattacharya: @anick09
 
-# Image of the meter
-![alt tag]()
+# Hardware prototype
+![alt tag](https://github.com/Dipanjan-M/bengalathon_project/blob/master/sample_prototype/prototype_v2.jpg)
 
 # Product demo video
 https://youtu.be/O-BlOAdvN-M
